@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StarryGeese — Character Art & Commissions</title>
+<meta name="description" content="Character commissions by StarryGeese — expressive anime / semi-realistic art. OCs, portraits, character sheets, chibis, book covers, and illustrations. Commissions open.">
+<meta property="og:title" content="StarryGeese — Character Art & Commissions">
+<meta property="og:description" content="Expressive anime / semi-realistic character art: OCs, portraits, character sheets, chibis, and book covers. Commissions open.">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="tokens.css">
+<style>
+/* ===== MASHUP: A's sticky nav + toggle · C's bento · original tier cards · A's gallery switcher ===== */
+
+/* Sticky top nav with persistent theme toggle (never leaves) */
+.nav{position:sticky;top:0;z-index:var(--z-nav);display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:14px 32px;border-bottom:1px solid var(--glass-hairline);background:var(--glass-1-fill);
+  -webkit-backdrop-filter:blur(var(--blur-nav)) saturate(var(--sat-nav));backdrop-filter:blur(var(--blur-nav)) saturate(var(--sat-nav));}
+.nav .links{display:flex;align-items:center;gap:22px;}
+.nav .links a.navlink{color:var(--text-strong);text-decoration:none;font-size:var(--fs-label);font-weight:500;}
+.nav .links a.navlink:hover{color:var(--accent);}
+/* Quiet utility toggles — deliberately low-key so the CTA stands out */
+.utils{display:inline-flex;align-items:center;gap:2px;margin:0 6px 0 4px;padding-left:14px;border-left:1px solid var(--glass-hairline);}
+.toggle{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:var(--radius-pill);
+  border:1px solid transparent;background:transparent;color:var(--text-subtle);font-size:12px;font-weight:600;cursor:pointer;
+  transition:background var(--dur-fast),color var(--dur-fast);}
+.toggle:hover{background:rgba(127,127,127,0.14);color:var(--text-strong);}
+@media(max-width:720px){.nav{padding:12px 18px;}.nav .links{gap:12px;}.nav .links .navlink{display:none;}}
+
+.wrap{max-width:var(--content-max);margin:0 auto;padding:0 24px;}
+
+/* BENTO HERO (from C) */
+.bento{display:grid;gap:16px;grid-template-columns:repeat(4,1fr);grid-auto-rows:200px;padding:40px 0 88px;}
+.bento>*{border-radius:var(--radius-card);overflow:hidden;position:relative;}
+.feature{grid-column:span 2;grid-row:span 2;}
+.intro{grid-column:span 2;grid-row:span 1;padding:32px;display:flex;flex-direction:column;justify-content:center;}
+.intro .eyebrow{margin-bottom:10px;}
+.intro h1{font-size:var(--fs-display);line-height:var(--lh-display);font-weight:var(--fw-display);letter-spacing:var(--tracking-tight);color:var(--text-strong);}
+.intro p{color:var(--text-muted);font-size:var(--fs-body-lg);margin-top:10px;}
+.ctile{grid-column:span 2;padding:26px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.ctile h3{font-size:var(--fs-h3);color:var(--text-strong);}
+.ctile p{color:var(--text-muted);font-size:var(--fs-caption);margin-top:4px;}
+.sq{grid-column:span 1;}
+@media(max-width:900px){.bento{grid-template-columns:repeat(2,1fr);}.feature,.intro,.ctile{grid-column:span 2;}}
+@media(max-width:560px){.bento{grid-template-columns:1fr;grid-auto-rows:170px;}.feature,.intro,.ctile,.sq{grid-column:span 1;}.feature{grid-row:span 2;}}
+
+/* section heads */
+.section-head{text-align:center;margin-bottom:36px;}
+.section-head h2{font-size:var(--fs-h1);color:var(--text-strong);font-weight:var(--fw-h1);letter-spacing:var(--tracking-tight);margin-top:6px;}
+.section-head p{color:var(--text-muted);font-size:var(--fs-body-lg);max-width:56ch;margin:8px auto 0;}
+.section{padding:56px 0;}
+
+/* TIER CARDS band (from the original preview) */
+.process{padding:40px;}
+.process .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px;}
+.pcard{padding:26px;}
+.pcard .step{font-size:var(--fs-caption);font-weight:700;color:var(--accent);letter-spacing:var(--tracking-caps);text-transform:uppercase;}
+.pcard h3{font-size:var(--fs-h3);color:var(--text-strong);margin:8px 0 6px;}
+.pcard p{color:var(--text-muted);font-size:var(--fs-body);}
+@media(max-width:820px){.process .cards{grid-template-columns:1fr;}}
+
+/* GALLERY with category switcher (from A) + example images */
+.filterbar{display:flex;justify-content:center;gap:8px;margin-bottom:28px;flex-wrap:wrap;}
+.chip{padding:9px 18px;border-radius:var(--radius-pill);font-size:var(--fs-caption);font-weight:600;color:var(--text-muted);background:var(--glass-2-fill);border:1px solid var(--glass-2-border);cursor:pointer;transition:all var(--dur-fast);}
+.chip:hover{border-color:var(--text-subtle);}
+.chip.on{background:var(--accent);color:#fff;border-color:transparent;}
+.gallery{columns:4;column-gap:16px;}
+.gallery .art{width:100%;margin:0 0 16px;break-inside:avoid;display:block;}
+.gallery .art.t{aspect-ratio:3/5;}.gallery .art.m{aspect-ratio:1/1;}.gallery .art.s{aspect-ratio:5/4;}.gallery .art.w{aspect-ratio:4/5;}
+.gallery .art.hide{display:none;}
+@media(max-width:1100px){.gallery{columns:3;}}@media(max-width:760px){.gallery{columns:2;}}@media(max-width:480px){.gallery{columns:1;}}
+
+/* COMMISSION split panel (from C) */
+.commission{display:grid;grid-template-columns:1fr 1fr;border-radius:var(--radius-panel);overflow:hidden;box-shadow:var(--shadow-1);}
+.commission .visual{position:relative;min-height:560px;background:linear-gradient(135deg,#34D399,#4F46E5 55%,#F0719E);}
+.commission .visual .overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:36px;background:linear-gradient(0deg,rgba(17,24,39,0.38),transparent 55%);}
+.commission .visual .overlay .eyebrow{color:#fff;}
+.commission .visual .overlay h2{color:#fff;font-size:var(--fs-h1);font-weight:var(--fw-h1);margin-top:8px;}
+.commission .visual .overlay p{color:rgba(255,255,255,0.92);font-size:var(--fs-body);margin-top:8px;max-width:36ch;}
+.commission .formside{background:var(--glass-1-fill);-webkit-backdrop-filter:blur(var(--blur-1));backdrop-filter:blur(var(--blur-1));padding:40px;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:820px){.commission{grid-template-columns:1fr;}.commission .visual{min-height:240px;}}
+
+/* SNOW canvas — can sit behind content or in front of it (over the art) */
+#snow{position:fixed;inset:0;pointer-events:none;}
+#snow.back{z-index:-1;}          /* behind everything, above the background */
+#snow.front{z-index:60;}         /* over the artwork, still below the nav (z:100) */
+
+/* PRICING */
+.pricing{max-width:960px;margin:0 auto;}
+.ptable-wrap{overflow-x:auto;border-radius:var(--radius-panel);}
+.ptable{width:100%;border-collapse:collapse;min-width:540px;}
+.ptable th,.ptable td{padding:16px 18px;text-align:center;}
+.ptable thead th{font-size:var(--fs-caption);text-transform:uppercase;letter-spacing:var(--tracking-caps);color:var(--text-muted);font-weight:700;border-bottom:1px solid var(--glass-hairline);}
+.ptable thead th:first-child,.ptable tbody th{text-align:left;}
+.ptable tbody th{font-size:var(--fs-body);font-weight:600;color:var(--text-strong);}
+.ptable tbody td{font-size:var(--fs-body-lg);font-weight:650;color:var(--text-strong);font-variant-numeric:tabular-nums;}
+.ptable tbody tr{border-bottom:1px solid var(--glass-hairline);transition:background var(--dur-fast);}
+.ptable tbody tr:last-child{border-bottom:0;}
+.ptable tbody tr:hover{background:var(--accent-soft);}
+.ptable tbody tr.chibi{background:var(--accent-soft);}
+.ptable .tierlabel{display:block;font-size:11px;font-weight:600;color:var(--text-subtle);text-transform:uppercase;letter-spacing:.04em;margin-top:3px;}
+.addons{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:20px;}
+.addon{padding:10px 18px;border-radius:var(--radius-pill);background:var(--glass-2-fill);border:1px solid var(--glass-2-border);font-size:var(--fs-label);font-weight:600;color:var(--text-strong);}
+.addon b{color:var(--accent);}
+.pnote{text-align:center;color:var(--text-subtle);font-size:var(--fs-caption);margin-top:16px;}
+
+/* FAQ accordion (glass cards you can add to freely) */
+.faq{max-width:840px;margin:0 auto;}
+.faq details{margin-bottom:12px;overflow:hidden;}
+.faq summary{list-style:none;cursor:pointer;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  font-size:var(--fs-body-lg);font-weight:600;color:var(--text-strong);}
+.faq summary::-webkit-details-marker{display:none;}
+.faq summary .plus{color:var(--accent);font-size:26px;line-height:1;flex:none;transition:transform var(--dur-base) var(--ease-standard);}
+.faq details[open] summary .plus{transform:rotate(45deg);}
+.faq .ans{padding:0 24px 22px;color:var(--text-muted);font-size:var(--fs-body);line-height:var(--lh-body-lg);}
+
+/* CONTACT section */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch;}
+.contact-info{padding:36px;display:flex;flex-direction:column;}
+.contact-info h3{font-size:var(--fs-h3);color:var(--text-strong);margin-bottom:6px;}
+.contact-info .lead{color:var(--text-muted);font-size:var(--fs-body);margin-bottom:24px;}
+.cmethod{display:flex;align-items:center;gap:14px;padding:14px 0;border-top:1px solid var(--glass-hairline);text-decoration:none;}
+.cmethod .ico{width:40px;height:40px;flex:none;border-radius:var(--radius-pill);background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.cmethod .lbl{font-size:var(--fs-caption);color:var(--text-subtle);}
+.cmethod .val{font-size:var(--fs-body);color:var(--text-strong);font-weight:500;}
+.contact-info .status{margin-top:auto;padding-top:20px;color:var(--status-finished);font-weight:600;font-size:var(--fs-label);}
+.contact-form{padding:36px;}
+@media(max-width:820px){.contact-grid{grid-template-columns:1fr;}}
+
+footer{text-align:center;color:var(--text-muted);font-size:var(--fs-caption);padding:64px 24px 96px;}
+.note{max-width:var(--content-max);margin:32px auto 0;padding:14px 18px;border-radius:var(--radius-input);background:var(--accent-soft);color:var(--text-muted);font-size:var(--fs-caption);text-align:center;}
+</style>
+</head>
+<body>
+<canvas id="snow" class="front" aria-hidden="true"></canvas>
+
+<!-- STICKY NAV with persistent theme toggle -->
+<nav class="nav">
+  <div class="brand">StarryGeese<span class="dot">.</span></div>
+  <div class="links">
+    <a class="navlink" href="#work">Work</a>
+    <a class="navlink" href="#pricing">Pricing</a>
+    <a class="navlink" href="#faq">FAQ</a>
+    <a class="navlink" href="#contact">Contact</a>
+    <div class="utils">
+      <button class="toggle" id="snowBtn" aria-label="Toggle snow effect">❄ On</button>
+      <button class="toggle" id="layerBtn" aria-label="Toggle snow in front of or behind the art">↑ Front</button>
+      <button class="toggle" id="themeBtn" aria-label="Toggle light or dark mode">🌙 Dark</button>
+    </div>
+    <a class="btn btn-primary" href="#commission">Commission Me</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- BENTO HERO (Stack C) with tier glass cards -->
+  <section class="bento">
+    <div class="feature art a1" tabindex="0"><div class="gcap"><div class="t">Morning Tide</div><div class="m">Oil on canvas · Featured</div></div></div>
+    <div class="intro glass-1">
+      <span class="eyebrow">Painter &amp; Illustrator</span>
+      <h1>Art made to be lived with.</h1>
+      <p>Commissioned portraits &amp; illustrations, made one at a time.</p>
+    </div>
+    <div class="sq art a3" tabindex="0"><div class="gcap"><div class="t">Field Notes</div><div class="m">Available</div></div></div>
+    <div class="sq art a4" tabindex="0"><div class="gcap"><div class="t">Companion</div><div class="m">Commission</div></div></div>
+    <div class="ctile glass-2 is-interactive">
+      <div><h3>Books open ✷</h3><p>Accepting a few projects this season</p></div>
+      <a class="btn btn-primary" href="#commission">Start →</a>
+    </div>
+    <div class="sq art a6" tabindex="0"><div class="gcap"><div class="t">Still, Blue</div><div class="m">Available</div></div></div>
+    <div class="sq art a7" tabindex="0"><div class="gcap"><div class="t">Marigold</div><div class="m">Available</div></div></div>
+  </section>
+
+  <!-- TIER CARDS band (from the original preview) -->
+  <section class="section" id="process">
+    <div class="section-head"><span class="eyebrow">How It Works</span><h2>Simple, from idea to doorstep</h2></div>
+    <div class="glass-1 process">
+      <div class="cards">
+        <div class="glass-2 pcard is-interactive"><div class="step">Step 01</div><h3>Tell me your idea</h3><p>Send a short brief with references, size, and your budget. I reply within 2–3 days.</p></div>
+        <div class="glass-2 pcard is-interactive"><div class="step">Step 02</div><h3>Approve the plan</h3><p>You get a quote with timeline and revisions. A 50% deposit reserves your spot.</p></div>
+        <div class="glass-2 pcard is-interactive"><div class="step">Step 03</div><h3>Receive your piece</h3><p>Progress photos along the way, then your finished work shipped worldwide, tracked.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY with working category switcher (Stack A) + example images -->
+  <section class="section" id="work">
+    <div class="section-head"><span class="eyebrow">The Gallery</span><h2>Selected Works</h2><p>Switch between collections below.</p></div>
+    <div class="filterbar" role="tablist">
+      <button class="chip on" data-filter="all">All</button>
+      <button class="chip" data-filter="portrait">Portraits</button>
+      <button class="chip" data-filter="illustration">Illustration</button>
+      <button class="chip" data-filter="pet">Pets</button>
+      <button class="chip" data-filter="landscape">Landscapes</button>
+      <button class="chip" data-filter="sold">Sold</button>
+    </div>
+    <div class="gallery" id="gallery">
+      <div class="art a1 m" data-cat="landscape" tabindex="0"><div class="gcap"><div class="t">Morning Tide</div><div class="m">Landscape · Available</div></div></div>
+      <div class="art a2 t" data-cat="portrait sold" tabindex="0"><div class="gcap"><div class="t">Her Garden</div><div class="m">Portrait · Sold</div></div></div>
+      <div class="art a4 w" data-cat="pet" tabindex="0"><div class="gcap"><div class="t">Companion</div><div class="m">Pet · Commission</div></div></div>
+      <div class="art a3 s" data-cat="illustration" tabindex="0"><div class="gcap"><div class="t">Field Notes</div><div class="m">Illustration · Available</div></div></div>
+      <div class="art a6 t" data-cat="landscape" tabindex="0"><div class="gcap"><div class="t">Still, Blue</div><div class="m">Landscape · Available</div></div></div>
+      <div class="art a5 m" data-cat="illustration sold" tabindex="0"><div class="gcap"><div class="t">Ember</div><div class="m">Illustration · Sold</div></div></div>
+      <div class="art a8 w" data-cat="portrait" tabindex="0"><div class="gcap"><div class="t">Long Horizon</div><div class="m">Portrait · Available</div></div></div>
+      <div class="art a7 s" data-cat="pet" tabindex="0"><div class="gcap"><div class="t">Marigold</div><div class="m">Pet · Available</div></div></div>
+      <div class="art a2 m" data-cat="portrait" tabindex="0"><div class="gcap"><div class="t">Quiet Hours</div><div class="m">Portrait · Available</div></div></div>
+      <div class="art a6 t" data-cat="illustration" tabindex="0"><div class="gcap"><div class="t">Undertow</div><div class="m">Illustration · Available</div></div></div>
+      <div class="art a1 s" data-cat="landscape sold" tabindex="0"><div class="gcap"><div class="t">First Light</div><div class="m">Landscape · Sold</div></div></div>
+      <div class="art a4 m" data-cat="pet" tabindex="0"><div class="gcap"><div class="t">Old Friend</div><div class="m">Pet · Commission</div></div></div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="section" id="pricing">
+    <div class="section-head"><span class="eyebrow">Pricing</span><h2>Commission Tiers</h2><p>Transparent base prices in USD. Choose your style, then bust, half, or full body.</p></div>
+    <div class="pricing">
+      <div class="glass-1">
+        <div class="ptable-wrap">
+          <table class="ptable">
+            <thead>
+              <tr><th>Style</th><th>Bust</th><th>Half Body</th><th>Full Body</th></tr>
+            </thead>
+            <tbody>
+              <tr><th>Sketch</th><td>$20</td><td>$30</td><td>$40</td></tr>
+              <tr><th>Line Art</th><td>$30</td><td>$50</td><td>$70</td></tr>
+              <tr><th>Flat Color</th><td>$50</td><td>$70</td><td>$100</td></tr>
+              <tr><th>Full Render</th><td>$70</td><td>$100</td><td>$150</td></tr>
+              <tr class="chibi">
+                <th>Chibis</th>
+                <td>$40<span class="tierlabel">Base</span></td>
+                <td>$80<span class="tierlabel">Vignette</span></td>
+                <td>$120<span class="tierlabel">Full Scene</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="addons">
+        <span class="addon">Extra character <b>+70%</b></span>
+        <span class="addon">Complex background <b>+$80+</b></span>
+      </div>
+      <p class="pnote">Chibi tiers are Base / Vignette / Full Scene. Final quote depends on complexity — a 50% deposit reserves your spot.</p>
+      <div style="text-align:center;margin-top:24px;"><a class="btn btn-primary" href="#commission">Commission a Piece</a></div>
+    </div>
+  </section>
+
+  <!-- COMMISSION split panel (Stack C) -->
+  <section class="section" id="commission">
+    <div class="commission">
+      <div class="visual">
+        <div class="overlay">
+          <span class="eyebrow">Let's Make Something</span>
+          <h2>Commission a Piece</h2>
+          <p>Tell me about your idea — I reply within 2–3 days.</p>
+        </div>
+      </div>
+      <div class="formside">
+        <h3 style="font-size:var(--fs-h3);font-weight:var(--fw-h3);color:var(--text-strong);margin-bottom:10px;">Ready when you are</h3>
+        <p style="color:var(--text-body);margin-bottom:16px;">Commissions go through my request form — about 5 minutes, and messy ideas are completely welcome. No commitment: you get an exact itemized quote first, and nothing starts until you approve it.</p>
+        <ul style="color:var(--text-body);font-size:var(--fs-label);line-height:2.1;margin:0 0 22px 18px;">
+          <li>Tell me your idea &amp; drop reference links</li>
+          <li>Pick your type, size, and finish level</li>
+          <li>I reply within 2–3 days with your quote — a 50% deposit reserves your spot</li>
+        </ul>
+        <a class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;" href="https://docs.google.com/forms/d/e/1FAIpQLSfS18d_9Atcpic42eJXJA1QP8avu3lQlWGxvYzAs7lLl6PUFA/viewform" target="_blank" rel="noopener">Open the Commission Form →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ (add as many <details> blocks as you like) -->
+  <section class="section" id="faq">
+    <div class="section-head"><span class="eyebrow">Good to Know</span><h2>Frequently Asked</h2><p>Tap a question to expand. You can add as many as you want.</p></div>
+    <div class="faq">
+      <details class="glass-2" open>
+        <summary>How much does a commission cost?<span class="plus">+</span></summary>
+        <div class="ans">Base prices are in the table above — most pieces land between $20 and $200 depending on how much of the character and the finish level. Extra characters and detailed backgrounds add to the base, and you always get an exact itemized quote before anything starts.</div>
+      </details>
+      <details class="glass-2">
+        <summary>How long does a commission take?<span class="plus">+</span></summary>
+        <div class="ans">Typically 2–4 weeks from approved sketch to finished piece, depending on the queue and complexity. I'll always give you a timeline in your quote before we begin.</div>
+      </details>
+      <details class="glass-2">
+        <summary>Do you require a deposit?<span class="plus">+</span></summary>
+        <div class="ans">Yes — a 50% deposit reserves your spot and covers materials. The remaining balance is due before the finished piece ships.</div>
+      </details>
+      <details class="glass-2">
+        <summary>How many revisions are included?<span class="plus">+</span></summary>
+        <div class="ans">Each tier includes a set number of revisions (usually 2–3). We agree on this up front so there are no surprises. Extra revisions can be added at an hourly rate.</div>
+      </details>
+      <details class="glass-2">
+        <summary>Do you ship worldwide?<span class="plus">+</span></summary>
+        <div class="ans">Yes. Original pieces ship worldwide, carefully packaged and fully tracked. Shipping is calculated at the quote stage based on size and destination.</div>
+      </details>
+      <details class="glass-2">
+        <summary>Can I use the artwork commercially?<span class="plus">+</span></summary>
+        <div class="ans">Personal use is included. Commercial licensing (merch, prints, branding) is available for an added fee — just mention your intended use in your inquiry.</div>
+      </details>
+    </div>
+  </section>
+
+  <!-- CONTACT (general — not a commission) -->
+  <section class="section" id="contact">
+    <div class="section-head"><span class="eyebrow">Say Hello</span><h2>Contact Me</h2><p>Not ready to commission? Questions, hellos, and collaborations are always welcome.</p></div>
+    <div class="contact-grid">
+      <div class="glass-1 contact-info">
+        <h3>Get in touch</h3>
+        <p class="lead">The fastest way to reach me is email. I read everything and reply within a couple of days.</p>
+        <a class="cmethod" href="mailto:Esprit.Edgar.Art@proton.me"><span class="ico">✉</span><span><span class="lbl">Email</span><br><span class="val">Esprit.Edgar.Art@proton.me</span></span></a>
+        <a class="cmethod" href="https://docs.google.com/forms/d/e/1FAIpQLSfS18d_9Atcpic42eJXJA1QP8avu3lQlWGxvYzAs7lLl6PUFA/viewform" target="_blank" rel="noopener"><span class="ico">✎</span><span><span class="lbl">Commission Form</span><br><span class="val">Start a request</span></span></a>
+        <div class="status">● Currently accepting commissions</div>
+      </div>
+      <form class="glass-1 contact-form" action="https://formsubmit.co/Esprit.Edgar.Art@proton.me" method="POST">
+        <input type="hidden" name="_subject" value="Message from your art website">
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+        <div class="field"><label>Name</label><input class="finput" name="name" required placeholder="Your name"></div>
+        <div class="field"><label>Email</label><input class="finput" type="email" name="email" required placeholder="you@email.com"></div>
+        <div class="field"><label>Message</label><textarea class="finput" name="message" rows="5" required placeholder="Say hi, ask a question, or just introduce yourself…"></textarea></div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;">Send Message</button>
+      </form>
+    </div>
+  </section>
+
+</div>
+
+<footer>© 2026 StarryGeese · Esprit.Edgar.Art@proton.me · <span style="color:var(--status-finished);font-weight:600;">● Accepting commissions</span></footer>
+
+<script>
+/* Persistent light/dark toggle */
+var tbtn=document.getElementById('themeBtn'),html=document.documentElement;
+tbtn.addEventListener('click',function(){
+  var dark=html.getAttribute('data-theme')==='dark';
+  html.setAttribute('data-theme',dark?'light':'dark');
+  tbtn.textContent=dark?'🌙 Dark':'☀️ Light';
+});
+
+/* Gallery category switcher */
+var chips=document.querySelectorAll('.chip'),tiles=document.querySelectorAll('#gallery .art');
+chips.forEach(function(c){
+  c.addEventListener('click',function(){
+    chips.forEach(function(x){x.classList.remove('on');});
+    c.classList.add('on');
+    var f=c.getAttribute('data-filter');
+    tiles.forEach(function(t){
+      var cats=t.getAttribute('data-cat')||'';
+      t.classList.toggle('hide', f!=='all' && cats.indexOf(f)===-1);
+    });
+  });
+});
+
+/* ❄ Snow — lightweight canvas animation, respects reduced-motion */
+(function(){
+  var canvas=document.getElementById('snow'),ctx=canvas.getContext('2d');
+  var flakes=[],W=0,H=0,raf=null,running=false;
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  function build(){flakes=[];var n=Math.min(150,Math.floor(W/11));for(var i=0;i<n;i++){flakes.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*2.6+0.8,s:Math.random()*0.9+0.4,sway:Math.random()*Math.PI*2});}}
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    ctx.save();
+    ctx.shadowColor='rgba(120,140,180,0.35)';ctx.shadowBlur=2;
+    ctx.fillStyle='rgba(255,255,255,0.9)';
+    ctx.beginPath();
+    for(var i=0;i<flakes.length;i++){var f=flakes[i];ctx.moveTo(f.x+f.r,f.y);ctx.arc(f.x,f.y,f.r,0,Math.PI*2);}
+    ctx.fill();ctx.restore();
+    for(var j=0;j<flakes.length;j++){var g=flakes[j];g.sway+=0.01;g.y+=g.s+g.r*0.28;g.x+=Math.sin(g.sway)*0.6;
+      if(g.y>H+6){g.y=-6;g.x=Math.random()*W;}}
+    raf=requestAnimationFrame(frame);
+  }
+  function start(){if(running)return;running=true;frame();}
+  function stop(){running=false;if(raf)cancelAnimationFrame(raf);ctx.clearRect(0,0,W,H);}
+  window.addEventListener('resize',function(){resize();build();});
+  resize();build();
+  var sbtn=document.getElementById('snowBtn');
+  function setBtn(){sbtn.textContent=running?'❄ Snow on':'❄ Snow off';}
+  sbtn.addEventListener('click',function(){running?stop():start();setBtn();});
+  if(reduce){stop();}else{start();}
+  setBtn();
+
+  /* Front / Behind layer toggle */
+  var lbtn=document.getElementById('layerBtn');
+  function setLayer(){lbtn.textContent=canvas.classList.contains('front')?'↑ Front':'↓ Behind';}
+  lbtn.addEventListener('click',function(){
+    canvas.classList.toggle('front');
+    canvas.classList.toggle('back');
+    setLayer();
+  });
+  setLayer();
+})();
+</script>
+<script data-goatcounter="https://starrygeese.goatcounter.com/count"
+        async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
