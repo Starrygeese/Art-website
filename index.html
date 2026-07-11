@@ -387,6 +387,15 @@ chips.forEach(function(c){
   setLayer();
 })();
 </script>
+<script>
+/* Don't count my own visits: open the site once with #toggle-goatcounter added to the
+   URL to turn counting off in this browser (do it again to turn it back on). */
+if(location.hash==='#toggle-goatcounter'){
+  if(localStorage.getItem('skipgc')==='t'){localStorage.removeItem('skipgc');alert('Your visits WILL be counted again in this browser.');}
+  else{localStorage.setItem('skipgc','t');alert('Your visits will no longer be counted in this browser.');}
+}
+window.goatcounter={no_onload:localStorage.getItem('skipgc')==='t'};
+</script>
 <script data-goatcounter="https://starrygeese.goatcounter.com/count"
         async src="https://gc.zgo.at/count.js"></script>
 </body>
